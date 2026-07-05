@@ -77,6 +77,7 @@ paywall.checkQuotas('free', { maxUploadPerDay:30, maxStorage:9e7, maxImageCount:
 |------|--------|
 | `paywall.config.ts` | **唯一方案定義**（tiers + 功能文案 + 活動橫幅）。前後端都 import 這個 |
 | `PricingPage.tsx` | 銷售型方案頁：限時橫幅、原價劃線→早鳥特價→折扣 badge、方案卡、功能比較表。接 `onCheckout(tierId)` |
+| `CheckoutPage.tsx` | 獨立結帳頁（**不是彈窗**）：訂單明細 + 帳單資訊表單 + 刷卡插槽。刷卡元件用 `renderPayment(billing)` 注入你的金流（payuni-embed/stripe…） |
 | `UpgradePromo.tsx` | 後台升級誘導卡：用量壓力條（X/limit）、下一階解鎖清單、早鳥價、CTA。接 `onUpgrade(targetTier)` |
 | `quota-limit.trigger.sql` | 免費版上限的 Postgres/Supabase trigger 範本（後端硬牆） |
 
