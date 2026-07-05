@@ -51,11 +51,10 @@ export function CheckoutPage({ tierId, defaults, features, onBack, renderPayment
             <Card className="bg-white border-slate-200 shadow-sm">
               <CardContent className="p-6">
                 <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">訂單明細</h2>
-                <div className="flex items-baseline justify-between mb-1">
-                  <span className="text-lg font-bold text-slate-800">{t.name}</span>
-                  <span className="text-lg font-bold text-slate-800">NT${t.price}</span>
-                </div>
-                <p className="text-sm text-slate-500 mb-4">每月自動續訂，可隨時取消</p>
+                {/* 方案名獨立一行 —— 別把價錢塞在名字旁邊，會擠 */}
+                <div className="text-xl font-bold text-slate-800 tracking-tight">{t.name}</div>
+                {t.tagline && <p className="text-sm text-slate-500 mt-1">{t.tagline}</p>}
+                <p className="text-sm text-slate-500 mt-1 mb-4">每月自動續訂，可隨時取消</p>
                 {features && features.length > 0 && (
                   <>
                     <Separator className="my-4 bg-slate-200" />
@@ -69,14 +68,20 @@ export function CheckoutPage({ tierId, defaults, features, onBack, renderPayment
                   </>
                 )}
                 <Separator className="my-4 bg-slate-200" />
+                {/* 價錢只出現這一次（本次應付）：原價劃線收斂 → 特價當主角 → 折扣/現省一條在下 */}
                 <div className="flex items-baseline justify-between">
                   <span className="font-semibold text-slate-800">本次應付</span>
-                  <div className="text-right">
+                  <div className="flex items-baseline whitespace-nowrap">
                     {t.originalPrice && <span className="text-sm text-slate-400 line-through mr-2">NT${t.originalPrice}</span>}
-                    <span className="text-2xl font-bold text-green-600">NT${t.price}</span>
-                    <span className="text-sm text-slate-500"> / 月</span>
+                    <span className="text-[1.7rem] leading-none font-extrabold text-green-600 tracking-tight">NT${t.price}</span>
+                    <span className="text-sm text-slate-500 ml-1.5">/ 月</span>
                   </div>
                 </div>
+                {t.discountPct > 0 && (
+                  <div className="mt-3 inline-block text-xs font-bold text-green-700 bg-green-50 rounded-full px-3 py-1">
+                    早鳥優惠 -{t.discountPct}%　·　現省 NT${t.saved}
+                  </div>
+                )}
               </CardContent>
             </Card>
             <p className="flex items-center gap-2 text-xs text-slate-500 px-2">
