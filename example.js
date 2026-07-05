@@ -45,3 +45,25 @@ console.log('standard 定價:         ', paywall.pricing('standard'));
 
 // ⑥ 功能比較表（直接餵給 UI 畫表）
 console.log('比較表:', JSON.stringify(paywall.compare(['packages', 'allTemplates', 'multiKeyword', 'apiAccess']), null, 2));
+
+// ─────────────────────────────────────────────────────────────
+// 多維配額示範（圖床 upimg 型：每日/每月/儲存/圖片數 多個配額維度）
+// ─────────────────────────────────────────────────────────────
+const imgHost = createPaywall({
+  tiers: [
+    { id: 'free',      name: '免費',   price: 0,
+      features: { maxUploadPerDay: 30,  maxStorage: 104857600, maxImageCount: 300 } },
+    { id: 'supporter', name: '支持者', price: 100,
+      features: { maxUploadPerDay: 80,  maxStorage: 524288000, maxImageCount: 2000 } },
+    { id: 'pro',       name: '進階',   price: 150, highlight: true,
+      features: { maxUploadPerDay: 150, maxStorage: 2147483648, maxImageCount: 6000 } },
+  ],
+});
+
+// 付款開通時：一次取該 tier 所有配額上限，寫進 UserQuota.max*
+console.log('\n[多維] pro 的配額上限:', imgHost.quotasOf('pro'));
+// → { maxUploadPerDay:150, maxStorage:2147483648, maxImageCount:6000 }
+
+// 儀表板：一次算完所有維度用量，畫多條壓力條
+console.log('[多維] free 用量檢查:', imgHost.checkQuotas('free', { maxUploadPerDay: 30, maxStorage: 90000000, maxImageCount: 120 }));
+// maxUploadPerDay 會 atLimit:true（30/30）、其他還有餘量

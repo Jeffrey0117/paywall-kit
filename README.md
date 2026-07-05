@@ -55,6 +55,20 @@ paywall.allTiers()                            // 全部 tier + pricing 展開（
 
 features 值：`true`/`false` = 有/無；`number` = 配額上限（`-1` 或 `Infinity` = 無限）。
 
+### 多維配額（圖床/上傳型專案）
+
+一個 tier 有多個獨立配額維度時（每日上傳 / 月上傳 / 儲存 / 圖片數…），全放進 `features` 當 number，用批次方法一次算：
+
+```js
+paywall.quotasOf('pro')
+// → { maxUploadPerDay:150, maxStorage:2147483648, maxImageCount:6000 }
+//   付款開通時一次取上限，寫進 UserQuota.max* 欄位
+
+paywall.checkQuotas('free', { maxUploadPerDay:30, maxStorage:9e7, maxImageCount:120 })
+// → 每個維度各回 { used, limit, remaining, atLimit, allowed }
+//   儀表板一次畫多條用量壓力條
+```
+
 ## UI 模板（templates/，React + shadcn + Tailwind）
 
 複製 `templates/` 到你的專案，改 `paywall.config.ts` 一份就換整套。依賴 shadcn 的 `Button`/`Card`/`Badge` + `lucide-react` + Tailwind。

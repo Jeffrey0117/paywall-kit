@@ -125,6 +125,33 @@ function createPaywall(opts = {}) {
     allTiers() {
       return order.map((id) => this.tier(id));
     },
+
+    /**
+     * 取某 tier 所有「配額型」欄位的上限（number 型 features）。
+     * 給後端付款開通時一次寫進 UserQuota.max* 之類的欄位（多維配額專案，如圖床 upimg）。
+     * @returns {Object<string, number>}  例如 { maxUploadPerDay:80, maxStorage:524288000 }
+     */
+    quotasOf(tierId) {
+      const f = tierOf(tierId).features || {};
+      const out = {};
+      for (const [k, v] of Object.entries(f)) if (typeof v === 'number') out[k] = v;
+      return out;
+    },
+
+    /**
+     * 批次檢查多個配額維度（每日上傳/月上傳/儲存/圖片數…一次算完）。
+     * @param {string} tierId
+     * @param {Object<string, number>} usage  各維度目前用量，例如 { maxUploadPerDay: 30, maxStorage: 12345 }
+     * @returns {Object<string, {limit:number, used:number, remaining:number, unlimited:boolean, atLimit:boolean, allowed:boolean}>}
+     */
+    checkQuotas(tierId, usage = {}) {
+      const out = {};
+      for (const feature of Object.keys(this.quotasOf(tierId))) {
+        const used = usage[feature] || 0;
+        out[feature] = { used, ...this.checkQuota(tierId, feature, used) };
+      }
+      return out;
+    },
   };
 }
 
