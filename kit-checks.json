@@ -1,0 +1,26 @@
+{
+  "note": "kit-kit audit 會拿這份去掃每個用到 paywall-kit 的專案。pattern 找到就算違反;files 只掃路徑符合的檔案(前端畫面相關)。規則的原文與理由在 SKILL.md「方案頁與付費牆 UX 鐵則」。",
+  "checks": [
+    {
+      "id": "pricing-draws-all-tiers",
+      "rule": "方案頁把所有等級都畫出來(會出現「訪客」欄)",
+      "fix": "方案頁改用 pricingTiers();訪客那一級在 tier 定義加 listed: false",
+      "pattern": "\\.allTiers\\(\\)",
+      "files": "(^|/)(public|src/(components|pages|app|routes|paywall)|app|pages|components|templates)/.*\\.(tsx|jsx|vue|svelte|js|html)$"
+    },
+    {
+      "id": "guest-in-plan-copy",
+      "rule": "方案頁文案裡有「訪客」這一欄",
+      "fix": "方案只比免費 vs 付費兩欄,把訪客那一欄拿掉",
+      "pattern": "(guest|visitor)\\s*:\\s*['\"`](訪客|Guest)",
+      "files": "(^|/)(public|src/(components|pages|app|routes|paywall)|app|pages|components)/.*\\.(tsx|jsx|vue|svelte|js|html)$"
+    },
+    {
+      "id": "pro-badge-on-feature",
+      "rule": "功能按鈕/列表上貼了「PRO」鎖定標籤",
+      "fix": "拿掉標籤,讓人先用;在免費範圍外才跳升級視窗(撞牆才推銷)",
+      "pattern": "\\b(proOnly|proLock|proBadge|lockLabel|lockBadge)\\b\\s*[:=]|Pro only|僅限 ?Pro|Pro ?專屬|PRO ?限定",
+      "files": "(^|/)(public|src/(components|pages|app|routes|paywall)|app|pages|components)/.*\\.(tsx|jsx|vue|svelte|js|html)$"
+    }
+  ]
+}

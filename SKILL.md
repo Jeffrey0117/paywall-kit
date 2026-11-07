@@ -30,6 +30,8 @@ description: 做銷售頁/方案頁/付費牆/升級視窗/免費版限制時觸
 
 **6. 後端才是牆。** 被鎖的內容連送都不要送到前端,只送「還剩幾個」;前端的牆只是體驗。參考 VoiceTube:逐字稿只露一段、學習模式鎖住。
 
+能自動檢查的幾條寫在 repo 根目錄的 `kit-checks.json`,`kit-kit audit paywall-kit` 會拿它掃所有用到這個 kit 的專案(CloudPipe 每天也會跑)。改規則時兩邊一起改。
+
 參考實作:takeENGLISH(`Jeffrey0117/takeenglish`)的 `src/plans.js`、`src/lessons.js`(present)、`public/lessons.js`(showWall)、`public/app.js`(renderPlans)。
 
 ## 銷售頁區塊分類(漏斗順序,14 種)
