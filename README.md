@@ -43,6 +43,8 @@ paywall.allTiers()                            // 全部 tier + pricing 展開（
 
 ### API
 
+方案頁怎麼畫(兩欄、不放訪客、撞牆才推銷)看 `SKILL.md` 的「方案頁與付費牆 UX 鐵則」。
+
 | 方法 | 回傳 | 用途 |
 |------|------|------|
 | `can(tier, feature)` | boolean | 布林功能是否開放（配額欄位 >0 也算有） |

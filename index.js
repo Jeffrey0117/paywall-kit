@@ -19,6 +19,8 @@
  * @property {string}  name         - 顯示名稱
  * @property {number}  price        - 實際扣款金額（單一價格來源，UI 只顯示）
  * @property {number} [originalPrice] - 行銷定錨原價（劃線用，可選）
+ * @property {boolean} [listed=true] - 會不會出現在方案頁/比較表。「訪客」這種不能選的等級設 false:
+ *           功能閘門照樣用它,但方案頁只比「可以選的」(通常就是免費 vs 付費)。
  * @property {Object<string, boolean|number>} features
  *           功能表。boolean = 有/無；number = 配額上限（-1 或 Infinity = 無限）。
  */
@@ -104,15 +106,19 @@ function createPaywall(opts = {}) {
      * @param {string[]} [features] - 要比較的功能 key；省略則取所有 tier 出現過的聯集。
      * @returns {{tiers:Tier[], rows:{feature:string, values:Object<string, boolean|number>}[]}}
      */
-    compare(features) {
+    compare(features, { onlyDifferent = false, includeUnlisted = false } = {}) {
+      // 方案頁只比可以選的等級(訪客不算);onlyDifferent 只留各欄不一樣的列,差距一眼看出來
+      const shown = includeUnlisted ? tiers : tiers.filter((t) => t.listed !== false);
       const keys = features && features.length
         ? features
-        : [...new Set(tiers.flatMap((t) => Object.keys(t.features || {})))];
-      const rows = keys.map((feature) => ({
-        feature,
-        values: Object.fromEntries(tiers.map((t) => [t.id, featVal(t.id, feature)])),
-      }));
-      return { tiers, rows };
+        : [...new Set(shown.flatMap((t) => Object.keys(t.features || {})))];
+      const rows = keys
+        .map((feature) => ({
+          feature,
+          values: Object.fromEntries(shown.map((t) => [t.id, featVal(t.id, feature)])),
+        }))
+        .filter((row) => !onlyDifferent || new Set(Object.values(row.values).map(String)).size > 1);
+      return { tiers: shown, rows };
     },
 
     /** 取單一 tier 定義（含 pricing 展開），給 UI 直接用。 */
@@ -124,6 +130,11 @@ function createPaywall(opts = {}) {
     /** 全部 tier（依階梯順序），各自展開 pricing。 */
     allTiers() {
       return order.map((id) => this.tier(id));
+    },
+
+    /** 方案頁要畫的 tier:排除 listed:false 的(例如訪客)。 */
+    pricingTiers() {
+      return order.filter((id) => byId.get(id).listed !== false).map((id) => this.tier(id));
     },
 
     /**
