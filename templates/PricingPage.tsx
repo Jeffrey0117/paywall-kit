@@ -21,8 +21,8 @@ const cell = (feature: string, v: boolean | number) => {
 };
 
 export function PricingPage({ currentTier, onCheckout }: PricingPageProps) {
-  const tiers = paywall.allTiers();
-  const comparison = paywall.compare(Object.keys(FEATURE_LABELS));
+  const tiers = paywall.pricingTiers(); // 不畫 listed:false 的等級(例如訪客),見 SKILL.md 方案頁鐵則
+  const comparison = paywall.compare(Object.keys(FEATURE_LABELS, { onlyDifferent: true }));
 
   return (
     <div className="min-h-screen py-10 px-4" style={{ backgroundColor: "#F8F7F5" }}>
