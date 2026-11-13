@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="logo.svg" width="96" height="96" alt="paywall-kit logo">
+</p>
+
 # paywall-kit 🧱💰
 
 **SaaS 變現漏斗，套下去就有整套付費牆。** 一份方案定義 → 驅動功能閘門、用量配額、升級路徑、原價→特價折扣計算（零依賴核心），外加銷售型方案頁 / 後台升級誘導卡 / 免費版上限 DB trigger（React + Supabase 模板）。
