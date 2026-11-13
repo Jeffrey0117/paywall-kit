@@ -6,5 +6,43 @@
   "work": {
     "guide": "README.md",
     "test": "npm test"
-  }
+  },
+  "offers": [
+    {
+      "id": "create_paywall",
+      "what": "變現 gate 的零依賴核心：傳入一份 tiers 方案定義，回傳功能閘門、配額、升級路徑、定價計算等方法。前後端 import 同一份定義，前端擋是體驗、後端擋是牆；金流本體不在這個 kit，checkout 動作自己注入。",
+      "how": "import",
+      "import": "const createPaywall = require('paywall-kit')"
+    },
+    {
+      "id": "feature_gate",
+      "what": "paywall.can(tier, feature) 判斷布林功能是否開放（配額欄位大於 0 也算有）；paywall.checkQuota(tier, feature, used) 回 { allowed, limit, remaining, unlimited, atLimit }。要擋某個功能或檢查免費版用量上限時用。",
+      "how": "import",
+      "import": "const createPaywall = require('paywall-kit')"
+    },
+    {
+      "id": "multi_quota",
+      "what": "多維配額（每日上傳、儲存、圖片數等）：paywall.quotasOf(tier) 一次取出所有數字型上限，付款開通時寫進使用者配額欄位；paywall.checkQuotas(tier, usage) 批次算每個維度的剩餘量，給儀表板畫用量壓力條。",
+      "how": "import",
+      "import": "const createPaywall = require('paywall-kit')"
+    },
+    {
+      "id": "pricing_and_tiers",
+      "what": "畫方案頁與升級卡要的資料：paywall.pricing(tier) 算原價、特價、折扣%、省多少；nextTier / isTop 給升級階梯；compare(features?) 給功能比較表；tier(id) / allTiers() / pricingTiers() 給方案卡。originalPrice 只是劃線用的定錨，實際扣款金額一律由後端與金流決定。",
+      "how": "import",
+      "import": "const createPaywall = require('paywall-kit')"
+    },
+    {
+      "id": "unlimited",
+      "what": "代表「無限」配額的常數（-1），寫 tier 的 features 上限時用，不要自己寫魔術數字。",
+      "how": "import",
+      "import": "const { UNLIMITED } = require('paywall-kit')"
+    },
+    {
+      "id": "skill",
+      "what": "做銷售頁、方案頁、付費牆、升級視窗、免費版限制時載入的打法：方案頁與付費牆 UX 鐵則（免費 vs 付費兩欄、不貼 PRO 標籤、撞牆才推銷）加上銷售頁區塊分類與文案句型庫。",
+      "how": "skill",
+      "skill": "paywall-kit"
+    }
+  ]
 }
